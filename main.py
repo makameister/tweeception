@@ -1,71 +1,38 @@
-from elasticsearch import Elasticsearch
-from lib.Dumper import Dumper
-import json, requests, pprint
-from tweepy import *
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from lib.DataFetcher import DataFetcher
+from lib.DataProcessor import DataProcessor
+import pprint
 import nltk
 
 """""
 Décommenter pour le premier lancement
 """""
-# nltk.download('punkt')
-
-"""
-analyzer = SentimentIntensityAnalyzer()
-
-sentence_en = "VADER is smart, handsome, and funny."
-sentence_fr = "VADER est intelligent, beau et drôle FUCK !"
-sentence_hard_fr = "VADER est intelligent, beau et drôle FUCK !"
+nltk.download('punkt')
 
 
+d = DataFetcher()
 
-sentence_hard_trans = "VADER est intelligent, beau et drôle FUCK !"
+print(d.fetchFromElastic())
+# install pprint
+# pprint.pprint(d.fetchFromElastic())
 
-print(analyzer.polarity_scores("VADER est intelligent, beau et drôle."))
-print(analyzer.polarity_scores(translation))
+sentence_1 = "VADER is smart, handsome, and funny."
+sentence_2 = "VADER est intelligent, beau et drôle FUCK !"
+sentence_3 = "VADER est intelligent, beau et drôle FUCK !"
+sentences = [sentence_1, sentence_2, sentence_3]
 
-print("--------")
+p = DataProcessor()
+p.process(sentences)
 
-tokenized_sentence = nltk.word_tokenize(translation)
+print('-------------------------')
+print('Polarités :')
+print('-------------------------')
+pprint.pprint(p.getPolarities())
+print('-------------------------')
+print('Phrases et listes de mots par type :')
+print('-------------------------')
+pprint.pprint(p.getSentences())
+print('-------------------------')
+print('Words count :')
+print('-------------------------')
+pprint.pprint(p.getWordsCount())
 
-sid = SentimentIntensityAnalyzer()
-pos_word_list = []
-neu_word_list = []
-neg_word_list = []
-
-for word in tokenized_sentence:
-    if (sid.polarity_scores(word)['compound']) >= 0.1:
-        pos_word_list.append(word)
-    elif (sid.polarity_scores(word)['compound']) <= -0.1:
-        neg_word_list.append(word)
-    else:
-        neu_word_list.append(word)
-
-print('Positive:', pos_word_list)
-print('Neutral:', neu_word_list)
-print('Negative:', neg_word_list)
-
-elastic = Elasticsearch("15.236.56.178:9200")
-
-# print("\nELASTICSEARCH INSTANCE:", elastic)
-# print("CLIENT ATTRIBUTES:", dir(elastic))
-
-# some_string = '{"hello" : "world"}'
-# turn a JSON string into a dictionary:
-# some_dict = json.loads(some_string)
-
-search_param = {
-    "query": {
-        "terms": {
-            "_id": [1234, 42]
-        }
-    }
-}
-# response = elastic.search(index="original", body=search_param)
-
-response = elastic.search(index="original", body="")
-
-# pprint.pprint(response, width=1)
-
-
-"""

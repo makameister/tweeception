@@ -47,7 +47,17 @@ class DataProcessor:
 
     def iterate(self, words, pol):
         for word in words:
-            if word in self.words_count[pol][words]:
-                self.words_count[pol][words] += 1
+            if word in self.words_count.get(pol):
+                sub = self.words_count.get(pol)
+                sub[word] += 1
             else:
-                self.words_count[pol][words] = 1
+                self.words_count.get(pol).update({word: 1})
+
+    def getPolarities(self):
+        return self.polarities
+
+    def getSentences(self):
+        return self.sentences
+
+    def getWordsCount(self):
+        return self.words_count

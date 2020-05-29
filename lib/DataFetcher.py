@@ -1,21 +1,19 @@
 from elasticsearch import Elasticsearch
-import json
-import requests
 
 
 class DataFetcher:
 
-    def __init__(self, url="http://15.236.56.178", port="9200", index="original", urlSuffixe="/_search"):
-        self.url = url
+    def __init__(self, ip="15.236.56.178", port="9200", index="original", urlSuffixe="/_search"):
+        self.ip = ip
         self.port = port
         self.index = index
         self.urlSuffixe = urlSuffixe
-        full_path = self.url + ":" + self.port
+        full_path = self.ip + ":" + self.port
         self.elastic = Elasticsearch(full_path)
         self.search_param = {}
 
-    def fetchFromElastic(self, index):
-        return self.elastic.search(index="original", body="")
+    def fetchFromElastic(self):
+        return self.elastic.search(index=self.index, body="")
 
     def format(self, data):
         return
@@ -31,3 +29,6 @@ class DataFetcher:
                 }
             }
         }
+
+    def setIndex(self, index):
+        self.index = index
